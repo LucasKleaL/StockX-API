@@ -20,6 +20,7 @@ pids
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
+dist
 
 # Dependency directories
 /node_modules
@@ -40,3 +41,7 @@ typings/
 
 # Output of 'npm pack'
 *.tgz
+
+# dotenv environment variables file
+.env
+.env.test

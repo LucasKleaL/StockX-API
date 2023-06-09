@@ -1,15 +1,17 @@
-import express, { Express, Request, Response } from 'express';
+import http from 'http';
+import App from './src/App';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const app: Express = express();
 const port = process.env.PORT;
+const hostname = process.env.HOSTNAME ?? 'http://localhost';
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('⚡️ StockX API server running.');
+App.set('port', port);
+const server = http.createServer(App);
+
+server.listen(port, () => {
+  console.log(`⚡️[server]: Server is running at ${hostname}:${port}`);
 });
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+module.exports = App;
