@@ -3,10 +3,10 @@ import UserRepository from '../repositories/UserRepository';
 import { celebrate, Joi } from 'celebrate';
 import User from '../models/User';
 
-const usersRouter = express.Router();
+const userRouter = express.Router();
 const userRepository = new UserRepository();
 
-usersRouter.post('/users',
+userRouter.post('/users',
     celebrate({
         body: Joi.object({
             email: Joi.string().required().email(),
@@ -29,7 +29,7 @@ usersRouter.post('/users',
         });
     });
 
-usersRouter.post('/users/login',
+userRouter.post('/users/login',
     celebrate({
         body: Joi.object({
             email: Joi.string().required().email(),
@@ -48,7 +48,7 @@ usersRouter.post('/users/login',
         })
     });
 
-usersRouter.get('/users/:uid', (req, res) => {
+userRouter.get('/users/:uid', (req, res) => {
     const uid = req.params.uid;
     userRepository.get(uid, (error: any, user: any) => {
         if (error) {
@@ -60,4 +60,4 @@ usersRouter.get('/users/:uid', (req, res) => {
     });
 });
 
-export default usersRouter;
+export default userRouter;

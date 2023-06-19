@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-import usersRouter from './routes/UserRouter';
+import userRouter from './routes/UserRouter';
 import { errors } from 'celebrate';
 import fs from 'fs';
+import productRouter from './routes/ProductRouter';
 
 class App {
 
@@ -36,7 +37,7 @@ class App {
         this.app.get('/', (req: Request, res: Response) => {
             res.send('⚡️ StockX server is running!');
         });
-        this.app.use('/api', usersRouter);
+        this.app.use('/api', userRouter, productRouter);
 
         // Swagger Route setup
         const swaggerFile: any = (process.cwd() + '/swagger.json');
