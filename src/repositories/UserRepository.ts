@@ -51,22 +51,26 @@ class UserRepository {
             })
     }
 
-    async get(uid: string, callback: any) {
-        await db.collection("Users")
-            .doc(uid)
-            .get()
-            .then((userDoc) => {
-                if (!userDoc.exists) {
-                    callback(`User with uid ${uid} does not exist`, null);
+    async get(userId: string): Promise<any> {
+        try {
+            const docRef = db.collection('Users').doc(userId);
+            const snapshot = await docRef.get();
+
+            if (snapshot.exists) {
+                const userData = snapshot.data();
+                if (userData?.deleted != null) {
+                    return null;
                 } else {
-                    const userData = userDoc.data();
-                    callback(null, userData);
+                    const userWithUid = {...userData, uid: snapshot.id};
+                    return userWithUid;
                 }
-            })
-            .catch((error) => {
-                console.error("Error getting user from Firestore. ", error);
-                callback(error, null);
-            });
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.error("Error retrieving user by ID: ", error);
+            throw error;
+        }
     }
 
     async login(user: User): Promise<any> {

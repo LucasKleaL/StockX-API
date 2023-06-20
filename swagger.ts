@@ -27,18 +27,25 @@ const doc = {
     ],
     definitions: {
         User: {
-            uid: "dxxasdqwe",
+            uid: "SXn2duju1bS6uXRZBKgXoVbC43D2",
             email: "lucas@email.com",
             password: "1234",
             name: "Lucas",
+            created: "19/06/2023, 18:23:02",
+            modified: null,
+            deleted: null
         },
         AddUser: {
             $email: "lucas@email.com",
             $password: "1234",
             $name: "Lucas"
         },
+        LoginUser: {
+            $email: "lucas@email.com",
+            $password: "1234"
+        },
         Product: {
-            uid: 'dasddasxas',
+            uid: 'SXn2duju1bS6uXRZBKgXoVbC43D2',
             name: "Produto 1",
             amount: 1,
             amountType: "Caixas",
@@ -47,6 +54,21 @@ const doc = {
             created: "19/06/2023, 18:23:02",
             modified: null,
             deleted: null
+        },
+        AddProduct: {
+            $name: "Produto 1",
+            $amount: 1,
+            $amountType: "Caixas",
+            $price: 10.00,
+            $category: "Peças"
+        },
+        UpdateProduct: {
+            $uid: 'SXn2duju1bS6uXRZBKgXoVbC43D2',
+            $name: "Produto 1",
+            $amount: 1,
+            $amountType: "Caixas",
+            $price: 10.00,
+            $category: "Peças"
         }
     }
 }
