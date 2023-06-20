@@ -84,42 +84,6 @@ class UserRepository {
             throw error;
         }
     }
-
-    /*
-    async login(user: User, acessToken: string, callback: (customToken?: string) => void) {
-        const auth = getAuth();
-        if (acessToken.length > 0) {
-            // Authentication with provided JWT accessToken
-            await firebaseAdmin.auth()
-                .verifyIdToken(acessToken)
-                .then((decodedToken) => {
-                    callback(acessToken);
-                    console.log('Successfully user login using accessToken. ' + decodedToken);
-                })
-                .catch((error) => {
-                    console.error("Error on user login. ", error);
-                    callback(error);
-                    console.error('Error on user accessToken login. ' + error);
-                });
-        } else {
-            // Authentication with provided email and password
-            await signInWithEmailAndPassword(auth, user.email, user.password)
-                .then(async (userCredential) => {
-                    const userAuth = userCredential.user;
-                    const expiresInSecs = 259200; // 72 horas em segundos
-                    const customClaims = {
-                        userAuth: userAuth,
-                        expiresIn: expiresInSecs // define o tempo de expiração em segundos
-                    };
-                    callback(userCredential.user);
-                })
-                .catch((error) => {
-                    console.error("Error on user login. ", error);
-                    callback(error);
-                });
-        }
-    }
-    */
 }
 
 export default UserRepository;

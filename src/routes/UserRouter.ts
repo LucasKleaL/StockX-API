@@ -15,7 +15,7 @@ userRouter.post('/users',
             name: Joi.string().required().max(50),
         })
     }),
-    (req, res) => {
+    (async (req, res) => {
         // #swagger.tags = ['User']
         // #swagger.description 'Endpoint to add a user.'
 
@@ -40,7 +40,8 @@ userRouter.post('/users',
                 res.status(201).json({ codeStaus: 201, user: user });
             }
         });
-    });
+    }) as RequestHandler
+);
 
 userRouter.post('/users/login',
     // #swagger.tags = ['User']
@@ -56,25 +57,14 @@ userRouter.post('/users/login',
             const user: User = req.body;
             const loggedUser = await userRepository.login(user);
             if (loggedUser != null) {
-                return res.sendStatus(201).json({ statusCode: 201, user: loggedUser });
+                return res.status(201).json({ statusCode: 201, user: loggedUser });
             } else {
-                return res.sendStatus(400).json({ statusCode: 400, user: null });
+                return res.status(400).json({ statusCode: 400, user: null });
             }
         } catch (error) {
             console.error('Error on user login:', error);
             throw error;
         }
-    
-        /*
-        const acessToken: string = req.header('acessToken') || '';
-        userRepository.login(user, acessToken, (customTokenJwt) => {
-            if (customTokenJwt) {
-                res.status(201).json({ customTokenJwt: customTokenJwt });
-            } else {
-                res.status(400).send();
-            }
-        })
-        */
     }) as RequestHandler
 );
 
