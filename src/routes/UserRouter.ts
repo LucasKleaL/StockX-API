@@ -6,6 +6,7 @@ import User from '../models/User';
 const userRouter = express.Router();
 const userRepository = new UserRepository();
 
+
 userRouter.post('/users',
     celebrate({
         body: Joi.object({
@@ -15,7 +16,18 @@ userRouter.post('/users',
         })
     }),
     (req, res) => {
+        // #swagger.tags = ['User']
+        // #swagger.description 'Endpoint to add a user.'
+
+
+        /* #swagger.parameters['user'] = {
+            in: 'body',
+            description: 'User data to add.',
+            required: true,
+            schema: { $ref: "#/definitions/AddUser" }
+        } */
         const user: User = req.body;
+
         userRepository.add(user, (error: any, token: any) => {
             if (error) {
                 if (error.code === "auth/email-already-exists") {
@@ -24,12 +36,15 @@ userRouter.post('/users',
                     res.status(500).send();
                 }
             } else {
+                // #swagger.responses[201] = { description: "Successfully created a new user." }
                 res.status(201).json({ token });
             }
         });
     });
 
 userRouter.post('/users/login',
+    // #swagger.tags = ['User']
+    // #swagger.description 'Endpoint to login a user.'
     celebrate({
         body: Joi.object({
             email: Joi.string().required().email(),
@@ -49,13 +64,19 @@ userRouter.post('/users/login',
     });
 
 userRouter.get('/users/:uid', (req, res) => {
+    // #swagger.tags = ['User']
+    // #swagger.description 'Endpoint to get a user by id.'
     const uid = req.params.uid;
     userRepository.get(uid, (error: any, user: any) => {
         if (error) {
             console.error("Error getting user from repository. ", error);
             res.status(500).send();
         } else {
-            res.status(200).json(user);
+            /* #swagger.responses[200] = { 
+               schema: { $ref: "#/definitions/User" },
+               description: 'Found user object.' 
+            } */
+            res.status(200).json({ statusCode: 200, user: user});
         }
     });
 });
