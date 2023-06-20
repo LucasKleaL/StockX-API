@@ -54,7 +54,14 @@ userRouter.post('/users/login',
     }),
     (async (req, res) => {
         try {
+            /* #swagger.parameters['user'] = {
+                in: 'body',
+                description: 'User data to login.',
+                required: true,
+                schema: { $ref: "#/definitions/LoginUser" }
+            } */
             const user: User = req.body;
+
             const loggedUser = await userRepository.login(user);
             if (loggedUser != null) {
                 return res.status(201).json({ statusCode: 201, user: loggedUser });
@@ -63,27 +70,33 @@ userRouter.post('/users/login',
             }
         } catch (error) {
             console.error('Error on user login:', error);
-            throw error;
+            return res.status(500).json({ statusCode: 500, error: 'Failed to login user' });
         }
     }) as RequestHandler
 );
 
-userRouter.get('/users/:uid', (req, res) => {
-    // #swagger.tags = ['User']
-    // #swagger.description 'Endpoint to get a user by id.'
-    const uid = req.params.uid;
-    userRepository.get(uid, (error: any, user: any) => {
-        if (error) {
-            console.error("Error getting user from repository. ", error);
-            res.status(500).send();
-        } else {
-            /* #swagger.responses[200] = { 
-               schema: { $ref: "#/definitions/User" },
-               description: 'Found user object.' 
-            } */
-            res.status(200).json({ statusCode: 200, user: user});
+userRouter.get('/users/:uid', 
+    (async (req, res) => {
+        // #swagger.tags = ['User']
+        // #swagger.description 'Endpoint to get a user by id.'
+        try {
+            const uid = req.params.uid;
+            const user = await userRepository.get(uid);
+            if (user != null) {
+                console.log(user);
+                /* #swagger.responses[200] = { 
+                    schema: { $ref: "#/definitions/User" },
+                    description: 'Found user object.' 
+                } */
+                return res.status(200).json({ statusCode: 200, user: user });
+            } else {
+                return res.status(404).json({ statusCode: 404, user: user });
+            }
+        } catch (error) {
+            console.error('Error retrieving user:', error);
+            return res.status(500).json({ statusCode: 500, error: 'Failed to retrieve user' });
         }
-    });
-});
+    }) as RequestHandler
+);
 
 export default userRouter;

@@ -20,7 +20,14 @@ productRouter.post('/products',
     // #swagger.description 'Endpoint to add a product.'
     (async (req, res) => {
         try {
+            /* #swagger.parameters['product'] = {
+                in: 'body',
+                description: 'Product data to add.',
+                required: true,
+                schema: { $ref: "#/definitions/AddProduct" }
+            } */
             const product: Product = req.body;
+
             const result  = await productRepository.add(product);
             return res.status(200).json({ statusCode: 201, result: result });
         } catch (error) {
@@ -45,7 +52,14 @@ productRouter.put('/products',
         // #swagger.tags = ['Product']
         // #swagger.description 'Endpoint to update a product.'
         try {
+            /* #swagger.parameters['product'] = {
+                in: 'body',
+                description: 'Product data to update.',
+                required: true,
+                schema: { $ref: "#/definitions/UpdateProduct" }
+            } */
             const product: Product = req.body;
+
             const result  = await productRepository.update(product);
             return res.status(200).json({ statusCode: 201, result: result });
         } catch (error) {
@@ -63,16 +77,16 @@ productRouter.get('/products/:uid',
             const uid = req.params.uid;
             const product = await productRepository.get(uid);
             if (product != null) {
+                /* #swagger.responses[200] = { 
+                    schema: { $ref: "#/definitions/Product" },
+                    description: 'Found product object.' 
+                } */
                 return res.status(200).json({ statusCode: 200, product: product });
             } else {
                 return res.status(404).json({ statusCode: 404, product: product });
             }
         } catch (error) {
             console.error('Error retrieving product:', error);
-            /* #swagger.responses[200] = { 
-               schema: { $ref: "#/definitions/Product" },
-               description: 'Found product object.' 
-            } */
             return res.status(500).json({ statusCode: 500, error: 'Failed to retrieve product' });
         }
     }) as RequestHandler
