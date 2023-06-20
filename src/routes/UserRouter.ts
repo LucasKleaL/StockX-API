@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import UserRepository from '../repositories/UserRepository';
 import { celebrate, Joi } from 'celebrate';
 import User from '../models/User';
@@ -15,7 +15,7 @@ userRouter.post('/users',
             name: Joi.string().required().max(50),
         })
     }),
-    (req, res) => {
+    (async (req, res) => {
         // #swagger.tags = ['User']
         // #swagger.description 'Endpoint to add a user.'
 
@@ -28,7 +28,7 @@ userRouter.post('/users',
         } */
         const user: User = req.body;
 
-        userRepository.add(user, (error: any, token: any) => {
+        userRepository.add(user, (error: any, user: any) => {
             if (error) {
                 if (error.code === "auth/email-already-exists") {
                     res.status(409).json({ message: "E-mail already exists" });
@@ -37,10 +37,11 @@ userRouter.post('/users',
                 }
             } else {
                 // #swagger.responses[201] = { description: "Successfully created a new user." }
-                res.status(201).json({ token });
+                res.status(201).json({ codeStaus: 201, user: user });
             }
         });
-    });
+    }) as RequestHandler
+);
 
 userRouter.post('/users/login',
     // #swagger.tags = ['User']
@@ -51,17 +52,21 @@ userRouter.post('/users/login',
             password: Joi.string().required().min(8)
         })
     }),
-    (req, res) => {
-        const user: User = req.body;
-        const acessToken: string = req.header('acessToken') || '';
-        userRepository.login(user, acessToken, (customTokenJwt) => {
-            if (customTokenJwt) {
-                res.status(201).json({ customTokenJwt: customTokenJwt });
+    (async (req, res) => {
+        try {
+            const user: User = req.body;
+            const loggedUser = await userRepository.login(user);
+            if (loggedUser != null) {
+                return res.status(201).json({ statusCode: 201, user: loggedUser });
             } else {
-                res.status(400).send();
+                return res.status(400).json({ statusCode: 400, user: null });
             }
-        })
-    });
+        } catch (error) {
+            console.error('Error on user login:', error);
+            throw error;
+        }
+    }) as RequestHandler
+);
 
 userRouter.get('/users/:uid', (req, res) => {
     // #swagger.tags = ['User']
