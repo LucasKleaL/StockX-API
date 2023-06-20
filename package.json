@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
+    "swagger-autogen": "node swagger.ts"
   },
   "author": "Gabriel Gomes Fachineli, Guilherme Zanchettin, Lucas Kusman Leal, Tiago Felipe Muller",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "firebase": "^9.22.2",
     "firebase-admin": "^11.9.0",
     "joi": "^17.9.2",
+    "swagger-autogen": "^2.23.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3"
   },

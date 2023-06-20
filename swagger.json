@@ -1,84 +1,297 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "description": "This is the Swagger Documentation of StockX server API",
-        "version": "1.0.0",
-        "title": "StockX API"
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the Swagger Documentation of StockX server API",
+    "version": "1.0.0",
+    "title": "StockX API"
+  },
+  "host": "localhost:3001",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "User",
+      "descriptions": "User endpoints"
     },
-    "schemes": ["http"],
-    "host": "localhost:3001",
-    "basePath": "/api",
-    "paths" : {
-        "/users": {
-            "post": {
-                "summary" : "Add a new User",
-                "description": "Add a new User",
-                "produces": ["application/json"],
-                "consumes": ["application/json"],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "User object",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "User" : {
-                                    "type": "object",
-                                    "$ref": "#/definitions/User"
-                                } 
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/UserResponse"
-                            }
-                        }
-                    },
-                    "409": {
-                        "description": "Invalid status value",
-                        "schema": {
-                            "$ref": "#/definitions/InvalidResponse"
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "definitions": {
-        "User": {
-            "type": "object",
-            "properties": {
-                "uid": {
-                    "type": "string"
-                }
-            }
-        },
-        "UserResponse": {
-            "type": "object",
-            "properties": {
-                "uid": {
-                    "type": "string"
-                }
-            }
-        },
-        "InvalidResponse": {
-            "type": "object",
-            "properties": {
-                "statusCode": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        }
+    {
+      "name": "Product",
+      "descriptions": "Products endpoints"
     }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User data to add.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddUser"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created a new user."
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "acessToken",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/users/{uid}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Found user object.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/products": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/products/{uid}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Found product object.",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "example": "dxxasdqwe"
+        },
+        "email": {
+          "type": "string",
+          "example": "lucas@email.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "1234"
+        },
+        "name": {
+          "type": "string",
+          "example": "Lucas"
+        }
+      }
+    },
+    "AddUser": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "lucas@email.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "1234"
+        },
+        "name": {
+          "type": "string",
+          "example": "Lucas"
+        }
+      },
+      "required": [
+        "email",
+        "password",
+        "name"
+      ]
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "example": "dasddasxas"
+        },
+        "name": {
+          "type": "string",
+          "example": "Produto 1"
+        },
+        "amount": {
+          "type": "number",
+          "example": 1
+        },
+        "amountType": {
+          "type": "string",
+          "example": "Caixas"
+        },
+        "price": {
+          "type": "number",
+          "example": 10
+        },
+        "category": {
+          "type": "string",
+          "example": "Peças"
+        },
+        "created": {
+          "type": "string",
+          "example": "19/06/2023, 18:23:02"
+        },
+        "modified": {},
+        "deleted": {}
+      }
+    }
+  }
 }

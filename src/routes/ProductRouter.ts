@@ -16,6 +16,8 @@ productRouter.post('/products',
             category: Joi.string().required(),
         })
     }),
+    // #swagger.tags = ['Product']
+    // #swagger.description 'Endpoint to add a product.'
     (async (req, res) => {
         try {
             const product: Product = req.body;
@@ -40,6 +42,8 @@ productRouter.put('/products',
         })
     }),
     (async (req, res) => {
+        // #swagger.tags = ['Product']
+        // #swagger.description 'Endpoint to update a product.'
         try {
             const product: Product = req.body;
             const result  = await productRepository.update(product);
@@ -53,6 +57,8 @@ productRouter.put('/products',
 
 productRouter.get('/products/:uid', 
     (async (req, res) => {
+        // #swagger.tags = ['Product']
+        // #swagger.description 'Endpoint to get a product by id.'
         try {
             const uid = req.params.uid;
             const product = await productRepository.get(uid);
@@ -63,6 +69,10 @@ productRouter.get('/products/:uid',
             }
         } catch (error) {
             console.error('Error retrieving product:', error);
+            /* #swagger.responses[200] = { 
+               schema: { $ref: "#/definitions/Product" },
+               description: 'Found product object.' 
+            } */
             return res.status(500).json({ statusCode: 500, error: 'Failed to retrieve product' });
         }
     }) as RequestHandler
@@ -70,6 +80,8 @@ productRouter.get('/products/:uid',
 
 productRouter.get('/products', 
     (async (req, res) => {
+        // #swagger.tags = ['Product']
+        // #swagger.description 'Endpoint to get all products.'
         try {
             const products = await productRepository.getAll();
             if (products != null) {
@@ -86,6 +98,8 @@ productRouter.get('/products',
 
 productRouter.delete('/products/:uid',
     (async (req, res) => {
+        // #swagger.tags = ['Product']
+        // #swagger.description 'Endpoint to delete a product by id.'
         try {
             const uid = req.params.uid;
             const job = await productRepository.get(uid);
