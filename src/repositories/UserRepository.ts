@@ -10,45 +10,52 @@ class UserRepository {
         initializeApp(firebaseConfig);
     }
 
-    async add(user: User, callback: any) {
-        firebaseAdmin.auth().createUser({
-            email: user.email,
-            password: user.password,
-            displayName: user.name,
-        }).then((userRecord) => {
-            const datetime = new Date();
-            const created = datetime.toLocaleDateString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            db.collection("Users").doc(userRecord.uid).set({
+    async add(user: User): Promise<any> {
+        try {
+            let result;
+            await firebaseAdmin.auth().createUser({
                 email: user.email,
-                name: user.name,
-                created: created,
-                modified: null,
-                deleted: null
-            }).then(() => {
-                const customClaims = { displayName: user.name };
-                firebaseAdmin.auth().createCustomToken(userRecord.uid, customClaims).then((customToken) => {
-                    console.log("Successfully created a new user.", userRecord.uid);
-                    callback(null, userRecord);
-                }).catch((error) => {
-                    console.error("Error creating a custom token. ", error);
-                    callback(error);
+                password: user.password,
+                displayName: user.name
+            }).then(async (userRecord) => {
+                const datetime = new Date();
+                const created = datetime.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
                 });
+                const newUser = {
+                    ...user,
+                    created: created,
+                    modified: null,
+                    deleted: null,
+                };
+                
+                await db.collection("Users").doc(userRecord.uid).set(newUser)
+                    .then(() => {
+                        result = {
+                            ...newUser,
+                            uid: userRecord.uid
+                        };
+                    }).catch((error) => {
+                        console.error("Error adding user to Firestore: ", error);
+                        result = error;
+                        throw error;
+                    });
             }).catch((error) => {
-                console.error("Error adding user to Firestore. ", error);
-                callback(error);
+                console.error("Error adding user to Firestore: ", error);
+                result = error;
+                throw error;
             });
-        })
-            .catch((error) => {
-                console.error("Error creating a new user. ", error);
-                callback(error);
-            })
+
+            return result;
+        } catch (error) {
+            console.error("Error adding user to Authentication: ", error);
+            throw error;
+        }
     }
 
     async get(userId: string): Promise<any> {

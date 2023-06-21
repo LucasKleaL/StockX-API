@@ -29,7 +29,11 @@ productRouter.post('/products',
             const product: Product = req.body;
 
             const result  = await productRepository.add(product);
-            return res.status(200).json({ statusCode: 201, result: result });
+            /* #swagger.responses[201] = { 
+                    schema: { $ref: "#/definitions/CreatedProduct" },
+                    description: 'Created product object.' 
+            } */
+            return res.status(201).json({ statusCode: 201, result: result });
         } catch (error) {
             console.error("Error adding product: ", error);
             return res.status(500).json({ statusCode: 500, error: "Failed to add product" });
@@ -61,7 +65,11 @@ productRouter.put('/products',
             const product: Product = req.body;
 
             const result  = await productRepository.update(product);
-            return res.status(200).json({ statusCode: 201, result: result });
+            /* #swagger.responses[201] = { 
+                    schema: { $ref: "#/definitions/UpdatedProduct" },
+                    description: 'Updated product uid.' 
+            } */
+            return res.status(201).json({ statusCode: 201, uid: result });
         } catch (error) {
             console.error("Error updating product: ", error);
             return res.status(500).json({ statusCode: 500, error: "Failed to update product" });
@@ -99,6 +107,10 @@ productRouter.get('/products',
         try {
             const products = await productRepository.getAll();
             if (products != null) {
+                /* #swagger.responses[200] = { 
+                    schema: { $ref: "#/definitions/Products" },
+                    description: 'Found list of products.' 
+                } */
                 return res.status(200).json({ statusCode: 200, products: products });
             } else {
                 return res.status(404).json({ statusCode: 404, products: products });

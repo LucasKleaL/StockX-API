@@ -18,28 +18,29 @@ userRouter.post('/users',
     (async (req, res) => {
         // #swagger.tags = ['User']
         // #swagger.description 'Endpoint to add a user.'
-
-
-        /* #swagger.parameters['user'] = {
-            in: 'body',
-            description: 'User data to add.',
-            required: true,
-            schema: { $ref: "#/definitions/AddUser" }
-        } */
-        const user: User = req.body;
-
-        userRepository.add(user, (error: any, user: any) => {
-            if (error) {
-                if (error.code === "auth/email-already-exists") {
-                    res.status(409).json({ message: "E-mail already exists" });
-                } else {
-                    res.status(500).send();
+        try {
+            /* #swagger.parameters['user'] = {
+                in: 'body',
+                description: 'User data to add.',
+                required: true,
+                schema: { $ref: "#/definitions/AddUser" }
+            } */
+            const user: User = req.body;
+            const result = await userRepository.add(user);
+            /* #swagger.responses[201] = { 
+                    schema: { $ref: "#/definitions/CreatedUser" },
+                    description: 'Created user object.' 
+            } */
+            res.status(201).json({ codeStatus: 201, user: result })
+        } catch (error) {
+            if (error instanceof Error) {
+                console.log('Error code:', error.message);
+                if (error.message.includes('The email address is already in use by another account.')) {
+                    return res.status(409).json({ statusCode: 409, message: "E-mail already exists" });
                 }
-            } else {
-                // #swagger.responses[201] = { description: "Successfully created a new user." }
-                res.status(201).json({ codeStaus: 201, user: user });
             }
-        });
+            return res.status(500).json({ statusCode: 500, error: "Failed to add user" });
+        }
     }) as RequestHandler
 );
 
@@ -64,6 +65,10 @@ userRouter.post('/users/login',
 
             const loggedUser = await userRepository.login(user);
             if (loggedUser != null) {
+                /* #swagger.responses[201] = { 
+                    schema: { $ref: "#/definitions/LoggedUser" },
+                    description: 'Logged user object.' 
+                } */    
                 return res.status(201).json({ statusCode: 201, user: loggedUser });
             } else {
                 return res.status(400).json({ statusCode: 400, user: null });
@@ -83,7 +88,6 @@ userRouter.get('/users/:uid',
             const uid = req.params.uid;
             const user = await userRepository.get(uid);
             if (user != null) {
-                console.log(user);
                 /* #swagger.responses[200] = { 
                     schema: { $ref: "#/definitions/User" },
                     description: 'Found user object.' 

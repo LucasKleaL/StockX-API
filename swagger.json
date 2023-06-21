@@ -47,7 +47,10 @@
         ],
         "responses": {
           "201": {
-            "description": "Successfully created a new user."
+            "description": "Created user object.",
+            "schema": {
+              "$ref": "#/definitions/CreatedUser"
+            }
           },
           "409": {
             "description": "Conflict"
@@ -77,7 +80,10 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Logged user object.",
+            "schema": {
+              "$ref": "#/definitions/LoggedUser"
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -136,8 +142,11 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created product object.",
+            "schema": {
+              "$ref": "#/definitions/CreatedProduct"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -161,8 +170,11 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Updated product uid.",
+            "schema": {
+              "$ref": "#/definitions/UpdatedProduct"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -177,7 +189,10 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Found list of products.",
+            "schema": {
+              "$ref": "#/definitions/Products"
+            }
           },
           "404": {
             "description": "Not Found"
@@ -248,28 +263,37 @@
     "User": {
       "type": "object",
       "properties": {
-        "uid": {
-          "type": "string",
-          "example": "SXn2duju1bS6uXRZBKgXoVbC43D2"
+        "statusCode": {
+          "type": "number",
+          "example": 200
         },
-        "email": {
-          "type": "string",
-          "example": "lucas@email.com"
-        },
-        "password": {
-          "type": "string",
-          "example": "1234"
-        },
-        "name": {
-          "type": "string",
-          "example": "Lucas"
-        },
-        "created": {
-          "type": "string",
-          "example": "19/06/2023, 18:23:02"
-        },
-        "modified": {},
-        "deleted": {}
+        "user": {
+          "type": "object",
+          "properties": {
+            "uid": {
+              "type": "string",
+              "example": "SXn2duju1bS6uXRZBKgXoVbC43D2"
+            },
+            "email": {
+              "type": "string",
+              "example": "lucas@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "1234"
+            },
+            "name": {
+              "type": "string",
+              "example": "Lucas"
+            },
+            "created": {
+              "type": "string",
+              "example": "19/06/2023, 18:23:02"
+            },
+            "modified": {},
+            "deleted": {}
+          }
+        }
       }
     },
     "AddUser": {
@@ -294,6 +318,42 @@
         "name"
       ]
     },
+    "CreatedUser": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "number",
+          "example": 201
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "uid": {
+              "type": "string",
+              "example": "SXn2duju1bS6uXRZBKgXoVbC43D2"
+            },
+            "email": {
+              "type": "string",
+              "example": "lucas@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "1234"
+            },
+            "name": {
+              "type": "string",
+              "example": "Lucas"
+            },
+            "created": {
+              "type": "string",
+              "example": "19/06/2023, 18:23:02"
+            },
+            "modified": {},
+            "deleted": {}
+          }
+        }
+      }
+    },
     "LoginUser": {
       "type": "object",
       "properties": {
@@ -311,39 +371,117 @@
         "password"
       ]
     },
+    "LoggedUser": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "number",
+          "example": 201
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "uid": {
+              "type": "string",
+              "example": "SXn2duju1bS6uXRZBKgXoVbC43D2"
+            },
+            "name": {
+              "type": "string",
+              "example": "Lucas"
+            }
+          }
+        }
+      }
+    },
     "Product": {
       "type": "object",
       "properties": {
-        "uid": {
-          "type": "string",
-          "example": "SXn2duju1bS6uXRZBKgXoVbC43D2"
-        },
-        "name": {
-          "type": "string",
-          "example": "Produto 1"
-        },
-        "amount": {
+        "statusCode": {
           "type": "number",
-          "example": 1
+          "example": 200
         },
-        "amountType": {
-          "type": "string",
-          "example": "Caixas"
-        },
-        "price": {
+        "product": {
+          "type": "object",
+          "properties": {
+            "uid": {
+              "type": "string",
+              "example": "SXn2duju1bS6uXRZBKgXoVbC43D2"
+            },
+            "name": {
+              "type": "string",
+              "example": "Produto 1"
+            },
+            "amount": {
+              "type": "number",
+              "example": 1
+            },
+            "amountType": {
+              "type": "string",
+              "example": "Caixas"
+            },
+            "price": {
+              "type": "number",
+              "example": 10
+            },
+            "category": {
+              "type": "string",
+              "example": "Peças"
+            },
+            "created": {
+              "type": "string",
+              "example": "19/06/2023, 18:23:02"
+            },
+            "modified": {},
+            "deleted": {}
+          }
+        }
+      }
+    },
+    "Products": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
           "type": "number",
-          "example": 10
+          "example": 200
         },
-        "category": {
-          "type": "string",
-          "example": "Peças"
-        },
-        "created": {
-          "type": "string",
-          "example": "19/06/2023, 18:23:02"
-        },
-        "modified": {},
-        "deleted": {}
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "uid": {
+                "type": "string",
+                "example": "SXn2duju1bS6uXRZBKgXoVbC43D3"
+              },
+              "name": {
+                "type": "string",
+                "example": "Produto 2"
+              },
+              "amount": {
+                "type": "number",
+                "example": 2
+              },
+              "amountType": {
+                "type": "string",
+                "example": "Caixas"
+              },
+              "price": {
+                "type": "number",
+                "example": 10
+              },
+              "category": {
+                "type": "string",
+                "example": "Peças"
+              },
+              "created": {
+                "type": "string",
+                "example": "19/06/2023, 18:25:02"
+              },
+              "modified": {},
+              "deleted": {}
+            }
+          }
+        }
       }
     },
     "AddProduct": {
@@ -377,6 +515,50 @@
         "price",
         "category"
       ]
+    },
+    "CreatedProduct": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "number",
+          "example": 201
+        },
+        "product": {
+          "type": "object",
+          "properties": {
+            "uid": {
+              "type": "string",
+              "example": "SXn2duju1bS6uXRZBKgXoVbC43D2"
+            },
+            "name": {
+              "type": "string",
+              "example": "Produto 1"
+            },
+            "amount": {
+              "type": "number",
+              "example": 1
+            },
+            "amountType": {
+              "type": "string",
+              "example": "Caixas"
+            },
+            "price": {
+              "type": "number",
+              "example": 10
+            },
+            "category": {
+              "type": "string",
+              "example": "Peças"
+            },
+            "created": {
+              "type": "string",
+              "example": "19/06/2023, 18:23:02"
+            },
+            "modified": {},
+            "deleted": {}
+          }
+        }
+      }
     },
     "UpdateProduct": {
       "type": "object",
@@ -414,6 +596,19 @@
         "price",
         "category"
       ]
+    },
+    "UpdatedProduct": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "number",
+          "example": 201
+        },
+        "uid": {
+          "type": "string",
+          "example": "d17u0PhrETLAGNNHeONP"
+        }
+      }
     }
   }
 }
